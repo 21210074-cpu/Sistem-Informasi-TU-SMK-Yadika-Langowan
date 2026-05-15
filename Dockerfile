@@ -18,6 +18,9 @@ WORKDIR /var/www/html
 # Copy project files
 COPY . .
 
+# Remove .env so Railway environment variables take effect
+RUN rm -f .env
+
 # Install PHP dependencies
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader --no-interaction
 
@@ -27,12 +30,6 @@ RUN npm install && npm run build
 # Set permissions
 RUN chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
-
-# Copy .env
-COPY .env.example .env
-
-# Generate app key
-RUN php artisan key:generate
 
 EXPOSE 8000
 
