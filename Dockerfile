@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.3-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -25,14 +25,8 @@ RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader -
 RUN npm install && npm run build
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
+RUN chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
-
-# Apache config - fix MPM conflict and point to Laravel public folder
-RUN a2dismod mpm_event || true \
-    && a2enmod mpm_prefork rewrite \
-    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
 
 # Copy .env
 COPY .env.example .env
@@ -40,6 +34,6 @@ COPY .env.example .env
 # Generate app key
 RUN php artisan key:generate
 
-EXPOSE 80
+EXPOSE 8000
 
-CMD ["bash", "-c", "php artisan migrate --force && apache2-foreground"]
+CMD ["bash", "-c", "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000"]
