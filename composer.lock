@@ -1708,7 +1708,7 @@
                 "monolog/monolog": "^3.0",
                 "nesbot/carbon": "^3.8.4",
                 "nunomaduro/termwind": "^2.0",
-                "php": "^8.2",
+                "php": "^8.3",
                 "psr/container": "^1.1.1|^2.0.1",
                 "psr/log": "^1.0|^2.0|^3.0",
                 "psr/simple-cache": "^1.0|^2.0|^3.0",
@@ -3618,7 +3618,7 @@
             },
             "require": {
                 "ext-mbstring": "*",
-                "php": "^8.2",
+                "php": "^8.3",
                 "symfony/console": "^7.3.6"
             },
             "require-dev": {
@@ -8091,7 +8091,7 @@
                 "laravel/mcp": "^0.5.1",
                 "laravel/prompts": "^0.3.10",
                 "laravel/roster": "^0.2.9",
-                "php": "^8.2"
+                "php": "^8.3"
             },
             "require-dev": {
                 "laravel/pint": "^1.27.0",
@@ -8229,7 +8229,7 @@
                 "illuminate/process": "^10.24|^11.0|^12.0",
                 "illuminate/support": "^10.24|^11.0|^12.0",
                 "nunomaduro/termwind": "^1.15|^2.0",
-                "php": "^8.2",
+                "php": "^8.3",
                 "symfony/console": "^6.0|^7.0"
             },
             "require-dev": {
@@ -11112,7 +11112,7 @@
                 "ext-ctype": "*",
                 "ext-date": "*",
                 "ext-filter": "*",
-                "php": "^8.2"
+                "php": "^8.3"
             },
             "suggest": {
                 "ext-intl": "",
@@ -11163,7 +11163,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2"
+        "php": "^8.3"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"
