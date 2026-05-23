@@ -1,4 +1,4 @@
-    <?php
+<?php
 
 use App\Http\Middleware\CheckPermission;
 use App\Http\Middleware\CheckRole;
@@ -13,6 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'role' => CheckRole::class,
             'permission' => CheckPermission::class,
