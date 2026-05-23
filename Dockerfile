@@ -53,6 +53,12 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
     && a2enmod rewrite
 
-EXPOSE 80
+# Force HTTPS headers from proxy
+RUN echo '<Directory /var/www/html/public>\n\
+    AllowOverride All\n\
+    SetEnvIf X-Forwarded-Proto https HTTPS=on\n\
+</Directory>' >> /etc/apache2/sites-available/000-default.conf \
+    && a2enmod headers
 
+EXPOSE 80
 CMD ["apache2-foreground"]
