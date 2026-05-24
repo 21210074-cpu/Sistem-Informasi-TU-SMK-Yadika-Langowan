@@ -57,4 +57,4 @@ class DatabaseSeeder extends Seeder
         $this->call(IncomingLetterSeeder::class);
         $this->call(OutgoingLetterSeeder::class);
     }
-} 
+}
