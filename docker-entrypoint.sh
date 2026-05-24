@@ -1,7 +1,6 @@
 #!/bin/bash
-set -e
 
 php artisan migrate --force 2>/dev/null || true
-php artisan config:cache
+php artisan config:cache || true
 
-apache2-foreground
+exec apache2-foreground
