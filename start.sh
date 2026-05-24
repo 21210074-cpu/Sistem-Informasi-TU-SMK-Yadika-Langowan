@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# Fix MPM conflict — paksa hanya mpm_prefork
+a2dismod mpm_event mpm_worker 2>/dev/null || true
+a2enmod mpm_prefork 2>/dev/null || true
+
 echo "Waiting for database..."
 for i in $(seq 1 15); do
     php artisan db:show --json > /dev/null 2>&1 && break
@@ -14,7 +18,6 @@ php artisan view:clear
 
 php artisan migrate --force
 
-# Hanya seed jika belum ada data (cek tabel roles kosong)
 ROLE_COUNT=$(php artisan tinker --execute="echo \App\Models\Role::count();" 2>/dev/null | tail -1)
 if [ "$ROLE_COUNT" = "0" ] || [ -z "$ROLE_COUNT" ]; then
     echo "Seeding database..."
