@@ -30,3 +30,5 @@ RUN echo '<Directory /var/www/html/public>\n\
 </Directory>' >> /etc/apache2/sites-available/000-default.conf
 EXPOSE 80
 CMD php artisan config:clear && php artisan session:table || true && php artisan migrate --force && php artisan db:seed --force || true && apache2-foreground
+# Force redeploy with seeder
+CMD php artisan config:clear && php artisan session:table || true && php artisan migrate --force && php artisan db:seed --force && apache2-foreground
