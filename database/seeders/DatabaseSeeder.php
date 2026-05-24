@@ -24,11 +24,13 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Administrator',
                 'email' => 'admin@smk.sch.id',
                 'role_id' => $adminRole?->id,
+                'is_active' => true,
             ]);
         } else {
             $adminUser->update([
                 'name' => 'Administrator',
                 'role_id' => $adminRole?->id,
+                'is_active' => true,
             ]);
         }
         // Create test users for each role
@@ -41,11 +43,13 @@ class DatabaseSeeder extends Seeder
                     'name' => 'User '.$role->display_name,
                     'email' => $email,
                     'role_id' => $role->id,
+                    'is_active' => true,
                 ]);
             } else {
                 $existingUser->update([
                     'name' => 'User '.$role->display_name,
                     'role_id' => $role->id,
+                    'is_active' => true,
                 ]);
             }
         }
