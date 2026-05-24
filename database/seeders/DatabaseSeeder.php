@@ -1,28 +1,27 @@
 <?php
 namespace Database\Seeders;
+
 use App\Models\Role;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Seed roles and permissions first
         $this->call(RolePermissionSeeder::class);
-        // Seed positions
         $this->call(PositionSeeder::class);
-        // Get admin role
+
         $adminRole = Role::where('name', Role::ADMIN)->first();
-        // Create admin user once, update role if user already exists
+
         $adminUser = User::where('email', 'admin@smk.sch.id')->first();
         if ($adminUser === null) {
-            User::factory()->create([
+            User::create([
                 'name' => 'Administrator',
                 'email' => 'admin@smk.sch.id',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
                 'role_id' => $adminRole?->id,
                 'is_active' => true,
             ]);
@@ -33,15 +32,17 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true,
             ]);
         }
-        // Create test users for each role
+
         $roles = Role::where('name', '!=', Role::ADMIN)->get();
         foreach ($roles as $role) {
             $email = strtolower(str_replace('_', '.', $role->name)).'@smk.sch.id';
             $existingUser = User::where('email', $email)->first();
             if ($existingUser === null) {
-                User::factory()->create([
+                User::create([
                     'name' => 'User '.$role->display_name,
                     'email' => $email,
+                    'password' => Hash::make('password'),
+                    'email_verified_at' => now(),
                     'role_id' => $role->id,
                     'is_active' => true,
                 ]);
@@ -53,8 +54,12 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
-        // Seed letter agenda data
-        $this->call(IncomingLetterSeeder::class);
-        $this->call(OutgoingLetterSeeder::class);
+
+        if (\App\Models\IncomingLetter::count() === 0) {
+            $this->call(IncomingLetterSeeder::class);
+        }
+        if (\App\Models\OutgoingLetter::count() === 0) {
+            $this->call(OutgoingLetterSeeder::class);
+        }
     }
 }
