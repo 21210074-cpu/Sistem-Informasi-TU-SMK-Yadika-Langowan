@@ -42,8 +42,9 @@ RUN echo '<Directory /var/www/html/public>\n\
 
 EXPOSE 80
 
-CMD php artisan migrate --force 2>/dev/null; true && \
-    php artisan config:cache && \
+CMD php artisan migrate --force 2>/dev/null; \
+    php artisan db:seed --force 2>/dev/null; \
+    php artisan config:cache; \
     a2dismod mpm_event 2>/dev/null; true && \
     a2enmod mpm_prefork 2>/dev/null; true && \
     apache2-foreground
