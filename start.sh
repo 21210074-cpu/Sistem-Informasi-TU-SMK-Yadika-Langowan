@@ -19,13 +19,20 @@ php artisan route:cache
 
 php artisan migrate --force
 
-ROLE_COUNT=$(php artisan tinker --execute="echo \App\Models\Role::count();" 2>/dev/null | tail -1)
-if [ "$ROLE_COUNT" = "0" ] || [ -z "$ROLE_COUNT" ]; then
+# Cek langsung via MySQL, lebih reliable dari tinker
+USER_COUNT=$(php -r "
+\$pdo = new PDO('mysql:host='.getenv('DB_HOST').';port='.getenv('DB_PORT').';dbname='.getenv('DB_DATABASE'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
+echo \$pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
+")
+
+echo "User count: $USER_COUNT"
+
+if [ "$USER_COUNT" -le "1" ]; then
     echo "Seeding database..."
     php artisan db:seed --force
     echo "Seeding done!"
 else
-    echo "Database already seeded, skipping."
+    echo "Database already seeded ($USER_COUNT users), skipping."
 fi
 
 apache2-foreground
