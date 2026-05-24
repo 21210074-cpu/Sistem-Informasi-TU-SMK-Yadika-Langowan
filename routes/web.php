@@ -3,10 +3,11 @@ use App\Livewire\Pages\Dashboard;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return redirect()->route('login');
 })->name('home');
-
-// ← baris reset-admin sudah dihapus
 
 Route::livewire('dashboard', Dashboard::class)
     ->middleware(['auth', 'verified'])
