@@ -19,7 +19,6 @@ php artisan route:cache
 
 php artisan migrate --force
 
-# Cek user count
 USER_COUNT=$(php -r "
 \$pdo = new PDO('mysql:host='.getenv('DB_HOST').';port='.getenv('DB_PORT').';dbname='.getenv('DB_DATABASE'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
 echo \$pdo->query('SELECT COUNT(*) FROM users')->fetchColumn();
@@ -34,7 +33,6 @@ else
     echo "Database already seeded ($USER_COUNT users), skipping."
 fi
 
-# Cek employee count — jalankan DemoDataSeeder jika belum ada
 EMPLOYEE_COUNT=$(php -r "
 \$pdo = new PDO('mysql:host='.getenv('DB_HOST').';port='.getenv('DB_PORT').';dbname='.getenv('DB_DATABASE'), getenv('DB_USERNAME'), getenv('DB_PASSWORD'));
 echo \$pdo->query('SELECT COUNT(*) FROM employees')->fetchColumn();
