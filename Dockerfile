@@ -2,7 +2,7 @@ FROM php:8.3-apache
 
 RUN apt-get update && apt-get install -y \
     libpng-dev libjpeg-dev libfreetype6-dev \
-    libzip-dev libonig-dev zip unzip git curl \
+    libzip-dev libonig-dev zip unzip git curl nodejs npm \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
         gd pdo_mysql mbstring zip bcmath opcache \
@@ -19,6 +19,8 @@ RUN composer install \
     --no-dev --no-scripts --prefer-dist
 
 COPY . .
+
+RUN npm install && npm run build
 
 RUN composer run-script post-autoload-dump || true
 
