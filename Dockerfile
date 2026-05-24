@@ -25,13 +25,14 @@ RUN composer run-script post-autoload-dump || true
 RUN mkdir -p storage/framework/sessions \
     storage/framework/views \
     storage/framework/cache \
-    storage/logs \
-    bootstrap/cache \
+    storage/logs bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' \
     /etc/apache2/sites-available/000-default.conf \
+    && sed -i 's/Listen 80/Listen 8000/' /etc/apache2/ports.conf \
+    && sed -i 's/:80>/:8000>/' /etc/apache2/sites-available/000-default.conf \
     && a2enmod rewrite
 
 RUN echo '<Directory /var/www/html/public>\n\
@@ -40,7 +41,7 @@ RUN echo '<Directory /var/www/html/public>\n\
 </Directory>' >> /etc/apache2/sites-available/000-default.conf \
     && a2enmod headers
 
-EXPOSE 80
+EXPOSE 8000
 
 CMD php artisan session:table || true && \
     php artisan migrate --force && \
