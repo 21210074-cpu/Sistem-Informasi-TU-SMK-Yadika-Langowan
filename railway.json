@@ -1,10 +1,5 @@
 {
-  "$schema": "https://railway.com/railway.schema.json",
-  "build": {
-    "builder": "DOCKERFILE",
-    "dockerfilePath": "Dockerfile"
-  },
   "deploy": {
-    "startCommand": "php artisan config:clear && php artisan migrate --force && php artisan db:seed --force && apache2-foreground"
+    "startCommand": "php artisan config:clear && php artisan migrate:fresh --force && php artisan db:seed --force && apache2-foreground"
   }
 }
