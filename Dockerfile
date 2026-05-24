@@ -33,7 +33,9 @@ RUN sed -i 's|/var/www/html|/var/www/html/public|g' \
     /etc/apache2/sites-available/000-default.conf \
     && sed -i 's/Listen 80/Listen 8000/' /etc/apache2/ports.conf \
     && sed -i 's/:80>/:8000>/' /etc/apache2/sites-available/000-default.conf \
-    && a2enmod rewrite
+    && a2enmod rewrite \
+    && a2dismod mpm_event || true \
+    && a2enmod mpm_prefork
 
 RUN echo '<Directory /var/www/html/public>\n\
     AllowOverride All\n\
@@ -41,8 +43,9 @@ RUN echo '<Directory /var/www/html/public>\n\
 </Directory>' >> /etc/apache2/sites-available/000-default.conf \
     && a2enmod headers
 
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 8000
 
-CMD php artisan migrate --force || true && \
-    php artisan config:cache && \
-    apache2-foreground
+ENTRYPOINT ["docker-entrypoint.sh"]
