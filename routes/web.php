@@ -6,7 +6,7 @@ Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('dashboard');
     }
-    return redirect()->route('login');
+    return view('welcome');
 })->name('home');
 
 Route::livewire('dashboard', Dashboard::class)
