@@ -5,16 +5,19 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/create-admin', function () {
+Route::get('/reset-admin', function () {
     $role = \App\Models\Role::where('name', 'admin')->first();
-    \App\Models\User::create([
-        'name' => 'Administrator',
-        'email' => 'admin@smk.sch.id',
-        'password' => bcrypt('password'),
-        'email_verified_at' => now(),
-        'role_id' => $role?->id,
-    ]);
-    return 'Admin created! Login with admin@smk.sch.id / password';
+    \App\Models\User::updateOrCreate(
+        ['email' => 'admin@smk.sch.id'],
+        [
+            'name' => 'Administrator',
+            'password' => 'password',
+            'email_verified_at' => now(),
+            'role_id' => $role?->id,
+            'is_active' => true,
+        ]
+    );
+    return 'Admin reset! Login: admin@smk.sch.id / password — HAPUS route ini setelah berhasil login!';
 });
 
 // Test route for Livewire debugging
@@ -24,13 +27,13 @@ Route::livewire('test-livewire', 'test-livewire')
 Route::livewire('dashboard', Dashboard::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
-require __DIR__.'/settings.php';
-require __DIR__.'/master.php';
-require __DIR__.'/employee.php';
-require __DIR__.'/student.php';
-require __DIR__.'/admin.php';
-require __DIR__.'/parent.php';
-require __DIR__.'/student-portal.php';
-require __DIR__.'/academic.php';
-require __DIR__.'/inventory.php';
-require __DIR__.'/finance.php';
+require _DIR_.'/settings.php';
+require _DIR_.'/master.php';
+require _DIR_.'/employee.php';
+require _DIR_.'/student.php';
+require _DIR_.'/admin.php';
+require _DIR_.'/parent.php';
+require _DIR_.'/student-portal.php';
+require _DIR_.'/academic.php';
+require _DIR_.'/inventory.php';
+require _DIR_.'/finance.php';
