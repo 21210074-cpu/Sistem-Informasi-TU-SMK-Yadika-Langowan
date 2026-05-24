@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-# Fix MPM conflict — paksa hanya mpm_prefork
 a2dismod mpm_event mpm_worker 2>/dev/null || true
 a2enmod mpm_prefork 2>/dev/null || true
 
@@ -15,6 +14,8 @@ done
 php artisan config:clear
 php artisan route:clear
 php artisan view:clear
+php artisan config:cache
+php artisan route:cache
 
 php artisan migrate --force
 
