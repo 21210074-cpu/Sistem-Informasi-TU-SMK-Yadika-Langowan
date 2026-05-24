@@ -1,9 +1,12 @@
 FROM php:8.3-apache
 
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' \
-    /etc/apache2/sites-available/000-default.conf \
-    && sed -i 's/Listen 80/Listen 8000/' /etc/apache2/ports.conf \
-    && sed -i 's/:80>/:8000>/' /etc/apache2/sites-available/000-default.conf
+RUN apt-get update && apt-get install -y \
+    libpng-dev libjpeg-dev libfreetype6-dev \
+    libzip-dev libonig-dev zip unzip git curl \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
+        gd pdo_mysql mbstring zip bcmath opcache \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -28,19 +31,15 @@ RUN mkdir -p storage/framework/sessions \
 
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' \
     /etc/apache2/sites-available/000-default.conf \
-    && sed -i 's/Listen 80/Listen 8000/' /etc/apache2/ports.conf \
-    && sed -i 's/:80>/:8000>/' /etc/apache2/sites-available/000-default.conf \
-    && a2dismod mpm_event mpm_worker || true \
-    && a2enmod mpm_prefork rewrite headers
+    && a2enmod rewrite headers
 
 RUN echo '<Directory /var/www/html/public>\n\
     AllowOverride All\n\
     SetEnvIf X-Forwarded-Proto https HTTPS=on\n\
 </Directory>' >> /etc/apache2/sites-available/000-default.conf
 
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+EXPOSE 80
 
-EXPOSE 8000
-
-ENTRYPOINT ["docker-entrypoint.sh"]
+CMD php artisan migrate --force 2>/dev/null; \
+    php artisan config:cache; \
+    apache2-foreground
