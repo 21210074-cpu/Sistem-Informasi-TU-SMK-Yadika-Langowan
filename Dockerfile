@@ -42,7 +42,8 @@ RUN echo '<Directory /var/www/html/public>\n\
 
 EXPOSE 80
 
-CMD php artisan migrate --force 2>/dev/null; \
+CMD php artisan migrate --force --pretend 2>/dev/null; \
+    php artisan migrate --force 2>/dev/null; \
     php artisan db:seed --force 2>/dev/null; \
     php artisan config:cache; \
     a2dismod mpm_event 2>/dev/null; true && \
