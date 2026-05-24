@@ -5,6 +5,6 @@
     "dockerfilePath": "Dockerfile"
   },
   "deploy": {
-    "startCommand": "php artisan route:clear && php artisan config:clear && php artisan migrate --force && php artisan tinker --execute=\"App\\\\Models\\\\User::firstOrCreate(['email'=>'admin@smk.sch.id'],['name'=>'Administrator','password'=>bcrypt('password'),'email_verified_at'=>now()]);\" && apache2-foreground"
+    "startCommand": "php artisan db:seed --force && apache2-foreground"
   }
 }
