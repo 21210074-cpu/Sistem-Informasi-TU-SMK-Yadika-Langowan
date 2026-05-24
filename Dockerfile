@@ -42,8 +42,8 @@ RUN echo '<Directory /var/www/html/public>\n\
 
 EXPOSE 80
 
-CMD php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
+CMD php artisan session:table || true && \
     php artisan migrate --force && \
+    php artisan config:cache && \
+    php artisan route:cache && \
     apache2-foreground
