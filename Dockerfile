@@ -43,7 +43,6 @@ RUN echo '<Directory /var/www/html/public>\n\
 
 EXPOSE 8000
 
-CMD php artisan session:table || true && \
-    php artisan migrate --force && \
+CMD php artisan migrate --force || true && \
     php artisan config:cache && \
     apache2-foreground
