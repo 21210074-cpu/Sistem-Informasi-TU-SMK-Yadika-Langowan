@@ -6,8 +6,21 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// HAPUS route reset-admin ini setelah berhasil login!
-// Route::get('/reset-admin', ...);
+// SEMENTARA — hapus setelah berhasil login!
+Route::get('/reset-admin', function () {
+    $role = \App\Models\Role::where('name', 'admin')->first();
+    \App\Models\User::updateOrCreate(
+        ['email' => 'admin@smk.sch.id'],
+        [
+            'name' => 'Administrator',
+            'password' => bcrypt('password'),
+            'email_verified_at' => now(),
+            'role_id' => $role?->id,
+            'is_active' => true,
+        ]
+    );
+    return 'Done! Login: admin@smk.sch.id / password — HAPUS route ini setelah login!';
+});
 
 Route::livewire('dashboard', Dashboard::class)
     ->middleware(['auth', 'verified'])
