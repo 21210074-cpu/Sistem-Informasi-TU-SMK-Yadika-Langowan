@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PositionSeeder::class);
 
         $adminRole = Role::where('name', Role::ADMIN)->first();
-
         $adminUser = User::where('email', 'admin@smk.sch.id')->first();
         if ($adminUser === null) {
             User::create([
@@ -55,9 +54,14 @@ class DatabaseSeeder extends Seeder
             }
         }
 
+        if (\App\Models\Employee::count() === 0) {
+            $this->call(DemoDataSeeder::class);
+        }
+
         if (\App\Models\IncomingLetter::count() === 0) {
             $this->call(IncomingLetterSeeder::class);
         }
+
         if (\App\Models\OutgoingLetter::count() === 0) {
             $this->call(OutgoingLetterSeeder::class);
         }
