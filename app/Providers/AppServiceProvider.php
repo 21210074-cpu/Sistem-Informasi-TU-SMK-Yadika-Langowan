@@ -13,17 +13,11 @@ use Illuminate\Validation\Rules\Password;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         $this->configureDefaults();
@@ -34,9 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Date::use(CarbonImmutable::class);
 
-        if (app()->isProduction()) {
         \URL::forceScheme('https');
-        }
 
         DB::prohibitDestructiveCommands(
             app()->isProduction(),
@@ -53,24 +45,18 @@ class AppServiceProvider extends ServiceProvider
         );
     }
 
-    /**
-     * Configure gates for permission-based authorization
-     */
     protected function configureGates(): void
     {
-        // Define a gate for each permission dynamically
         Gate::before(function (User $user, string $ability) {
-            // Admin has all abilities
             if ($user->isAdmin()) {
                 return true;
             }
 
-            // Check if user has the specific permission
             if ($user->hasPermission($ability)) {
                 return true;
             }
 
-            return null; // Let other gates handle it
+            return null;
         });
     }
 }
