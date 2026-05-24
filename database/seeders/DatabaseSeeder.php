@@ -2,28 +2,27 @@
 namespace Database\Seeders;
 use App\Models\Role;
 use App\Models\User;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * Seed the application's database.
+     */
     public function run(): void
     {
         // Seed roles and permissions first
         $this->call(RolePermissionSeeder::class);
         // Seed positions
         $this->call(PositionSeeder::class);
-
         // Get admin role
         $adminRole = Role::where('name', Role::ADMIN)->first();
-
         // Create admin user once, update role if user already exists
         $adminUser = User::where('email', 'admin@smk.sch.id')->first();
         if ($adminUser === null) {
             User::factory()->create([
                 'name' => 'Administrator',
                 'email' => 'admin@smk.sch.id',
-                'password' => Hash::make('admin123'),
                 'role_id' => $adminRole?->id,
             ]);
         } else {
@@ -32,7 +31,6 @@ class DatabaseSeeder extends Seeder
                 'role_id' => $adminRole?->id,
             ]);
         }
-
         // Create test users for each role
         $roles = Role::where('name', '!=', Role::ADMIN)->get();
         foreach ($roles as $role) {
@@ -51,9 +49,8 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
-
         // Seed letter agenda data
         $this->call(IncomingLetterSeeder::class);
         $this->call(OutgoingLetterSeeder::class);
     }
-}
+} 
